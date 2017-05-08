@@ -36,5 +36,9 @@ public class Backlog{
 		}
 		backlog.add(index,nact);
 	}
-	
+	public void toString(){
+		for (int index=0; index<backlog.size(); index++) {
+			System.out.println(i + " : " + sprint.get(index).funcionalidad + " con costo " + sprint.get(i).costo);
+		}
+	}
 }
