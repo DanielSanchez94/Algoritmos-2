@@ -5,7 +5,7 @@ public class Backlog{
 	public ArrayList<Actividad> backlog;
 
 
-	public Backlog(int capacity){
+	public Backlog(){
 		backlog = new ArrayList<Actividad>();
 	}
 
@@ -33,34 +33,32 @@ public class Backlog{
 	public void insertBacklog(Actividad nact){
 		int index=0;
 		//mientras la prioridad sea menor a las del backlog, entoces cicla hasta encontrar el lugar correspondiente
-		while((nact.prioridad < backlog.get(index).prioridad)&&(index<backlog.size())){
-			index++;
+		while(index < backlog.size()){
+			if (nact.prioridad < backlog.get(index).prioridad)
+				index++;
+			else
+				break;
 		}
 		//luego de encontrar el lugar de prioridad que corresponde, priorizamos respecto al costo en horas de cada act.
-		while((nact.costo > backlog.get(index).costo)&&(index < backlog.size())){
-			index++;
+		while((index < backlog.size())){
+			if (nact.costo > backlog.get(index).costo)
+				index++;
+			else
+				break;
 		}
 		//agregamos la actividad al backlog
 		backlog.add(index,nact);
+		System.out.println("Inserte actividad: "+ nact.funcionalidad);
 	}
 
-	//muestra todos los elementos que deberian realizar en ese sprint
-	public void toString(){
-		for (int index=0; index<backlog.size(); index++) {
-			System.out.println(i + " : " + sprint.get(index).funcionalidad + " con costo " + sprint.get(i).costo);
+	public String toString(){
+		for (int index=0; index < backlog.size(); index++) {
+			System.out.println(index + " : " + backlog.get(index).funcionalidad + " con costo " + backlog.get(index).costo);
 		}
+    return "End";
 	}
 
-	//metodo que inserta ordenadamente los elementos correspondientes(con mayor prioridad)al sprint
-	public void insertSprint(int tamañosprint){
-		int i=0;
-		int cap=tamañosprint;
-		//mientras la prioridad sea menor a las del backlog, entoces cicla hasta encontrar el lugar correspondiente
-		while(i<backlog.size()){
-			cap=cap-;
-			sprint[i]=getMaxPriorityBacklog(cap);
-			i++;
-		}
-	}
+
+
+
 }
-//el eliminar vamos a tener que hacerlo por separado para que en insertarSprint podamos restarle a cap, el costo de el elemento que insertamos

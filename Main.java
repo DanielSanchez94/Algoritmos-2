@@ -1,6 +1,6 @@
 public class Main {
   public static void main(String[] args) {
-    Actividad a1 = new Actividad("act 1", 10, 2);
+    Actividad a1 = new Actividad("act1", 10, 2);
     Actividad a2 = new Actividad("act2",10,1);
     Actividad a3 = new Actividad("act3",10,4);
     Actividad a4 = new Actividad("act4",9,2);
@@ -20,7 +20,7 @@ public class Main {
     backlog.insertBacklog(a6);
     backlog.insertBacklog(a7);
     backlog.insertBacklog(a8);
-
+    backlog.toString();
     try{
       sprint.completeSprint(backlog);
     }catch(RuntimeException e){
