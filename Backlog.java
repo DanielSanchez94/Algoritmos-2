@@ -3,13 +3,9 @@ import java.lang.RuntimeException;
 
 public class Backlog{
 	public ArrayList<Actividad> backlog;
-	public ArrayList<Actividad> sprint;
-	public int capacitySprint;
 
-	public Backlog(int capacity){
+	public Backlog(){
 		backlog = new ArrayList<Actividad>();
-		sprint = new ArrayList<Actividad>();
-		capacitySprint = capacity;
 	}
 
 	public Actividad getMaxPriorityBacklog(int capacity)throws RuntimeException{ //Capacity es el espacio que queda por llenar en el sprint
@@ -36,9 +32,5 @@ public class Backlog{
 		}
 		backlog.add(index,nact);
 	}
-	public void toString(){
-		for (int index=0; index<backlog.size(); index++) {
-			System.out.println(i + " : " + sprint.get(index).funcionalidad + " con costo " + sprint.get(i).costo);
-		}
-	}
+
 }
