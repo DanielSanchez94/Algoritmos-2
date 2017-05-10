@@ -1,7 +1,14 @@
 import java.util.Scanner;
-
+/** Clase que define el menu principal de nuestro programa
+* @author: Armas Lucas, Martinez Agustin, Sanchez Daniel
+*/
 public class Main {
+
+  /** Metodo principal
+  * @param args 
+  */
   public static void main(String[] args) {
+    // Se crean actividades para insertar en el backlog
     Actividad a1 = new Actividad("act1", 10, 2);
     Actividad a2 = new Actividad("act2",10,1);
     Actividad a3 = new Actividad("act3",10,4);
@@ -10,10 +17,9 @@ public class Main {
     Actividad a6 = new Actividad("act6",5,6);
     Actividad a7 = new Actividad("act7",5,4);
     Actividad a8 = new Actividad("act8",2,4);
-
+    // Se inicializa el backlog
     Backlog backlog = new Backlog();
-
-
+    // Se agregan las actividades creadas al backlog
     backlog.insertBacklog(a1);
     backlog.insertBacklog(a2);
     backlog.insertBacklog(a3);
@@ -22,21 +28,23 @@ public class Main {
     backlog.insertBacklog(a6);
     backlog.insertBacklog(a7);
     backlog.insertBacklog(a8);
-
+    // Se muestra por pantalla el backlog
     System.out.println("El backlog contiene las siguientes actividades");
     backlog.toString();
     System.out.println(" Ingrese la duracion en dias de su sprint: ");
-
+    // Se solicita al usuario el numero de dias que dura el sprint
     Scanner var = new Scanner(System.in);
     int capacity = var.nextInt();
-
-    Sprint sprint = new Sprint(capacity*8); // Asumimos una cantidad de 8 horas por dia
-
+    // Se inicializa el sprint con su capacidad
+    // Asumimos una cantidad de 8 horas por dia
+    Sprint sprint = new Sprint(capacity*8);
+    // Se completa el sprint
     try{
       sprint.completeSprint(backlog);
     }catch(RuntimeException e){
     }
+    //Se muestra por pantalla el sprint completo
     System.out.println("El sprint ("+ (capacity*8)+" horas) queda conformado por las siguientes actividades");
     sprint.toString();
-  }
-}
+  }// Fin del metodo
+}// Fin de la clase
