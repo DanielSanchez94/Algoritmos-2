@@ -5,7 +5,7 @@ import java.util.Scanner;
 public class Main {
 
   /** Metodo principal
-  * @param args 
+  * @param args
   */
   public static void main(String[] args) {
     // Se crean actividades para insertar en el backlog
@@ -16,7 +16,7 @@ public class Main {
     Actividad a5 = new Actividad("act5",9,10);
     Actividad a6 = new Actividad("act6",5,6);
     Actividad a7 = new Actividad("act7",5,4);
-    Actividad a8 = new Actividad("act8",2,4);
+    Actividad a8 = new Actividad("act8",2,1);
     // Se inicializa el backlog
     Backlog backlog = new Backlog();
     // Se agregan las actividades creadas al backlog
@@ -39,12 +39,8 @@ public class Main {
     // Asumimos una cantidad de 8 horas por dia
     Sprint sprint = new Sprint(capacity*8);
     // Se completa el sprint
-    try{
-      sprint.completeSprint(backlog);
-    }catch(RuntimeException e){
-    }
-    //Se muestra por pantalla el sprint completo
-    System.out.println("El sprint ("+ (capacity*8)+" horas) queda conformado por las siguientes actividades");
-    sprint.toString();
+    int result = sprint.completeSprint(backlog);
+    // Se muestra por pantalla el maximo costo que se puede sumar en el sprint
+    System.out.println("Resultado: " + result);
   }// Fin del metodo
 }// Fin de la clase
