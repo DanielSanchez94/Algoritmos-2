@@ -14,11 +14,11 @@ public class Backlog{
 	public Actividad getMaxPriorityBacklog(int capacity)throws RuntimeException{ //Capacity es el espacio que queda por llenar en el sprint
 		int index = 0;
 		//mientras el costo no entre en el sprint y el backlog aun tenga actividades, entonces incrementamos
-		while((backlog.get(index).costo > capacity)&&(index<backlog.size())){
+		while((backlog.get(index).costoHr > capacity)&&(index<backlog.size())){
 			index++;
 		}
 		//si el backlog aun tiene actividades, entonces sumamos esa actividad al sprint
-		if( index++ < backlog.size()){
+		if( index < backlog.size()){
 			Actividad aux = backlog.get(index);
 			backlog.remove(index);
 			return aux;
@@ -33,28 +33,25 @@ public class Backlog{
 	public void insertBacklog(Actividad nact){
 		int index=0;
 		//mientras la prioridad sea menor a las del backlog, entoces cicla hasta encontrar el lugar correspondiente
-		while(index < backlog.size()){
-			if (nact.prioridad < backlog.get(index).prioridad)
-				index++;
-			else
-				break;
-		}
-		//luego de encontrar el lugar de prioridad que corresponde, priorizamos respecto al costo en horas de cada act.
-		while((index < backlog.size())){
-			if (nact.costo > backlog.get(index).costo)
-				index++;
-			else
-				break;
+		while((nact.valor < getPriority(index)) && (index < backlog.size())){
+			index++;
 		}
 		//agregamos la actividad al backlog
 		backlog.add(index,nact);
-		System.out.println("Inserte actividad: "+ nact.funcionalidad);
+	}
+
+	public int getPriority(int index){
+			if (index >= backlog.size())
+				return -1;
+			return backlog.get(index).valor;
 	}
 
 	public String toString(){
+		System.out.println(" ");
 		for (int index=0; index < backlog.size(); index++) {
-			System.out.println(index + " : " + backlog.get(index).funcionalidad + " con costo " + backlog.get(index).costo);
+			System.out.println("* "+ backlog.get(index).funcionalidad + " con costo " + backlog.get(index).costoHr + " y prioridad "+ backlog.get(index).valor);
 		}
+		System.out.println(" ");
     return "End";
 	}
 

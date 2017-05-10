@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 public class Main {
   public static void main(String[] args) {
     Actividad a1 = new Actividad("act1", 10, 2);
@@ -7,10 +9,10 @@ public class Main {
     Actividad a5 = new Actividad("act5",9,10);
     Actividad a6 = new Actividad("act6",5,6);
     Actividad a7 = new Actividad("act7",5,4);
-    Actividad a8 = new Actividad("act8",23,4);
+    Actividad a8 = new Actividad("act8",2,4);
 
     Backlog backlog = new Backlog();
-    Sprint sprint = new Sprint(7);
+
 
     backlog.insertBacklog(a1);
     backlog.insertBacklog(a2);
@@ -20,12 +22,21 @@ public class Main {
     backlog.insertBacklog(a6);
     backlog.insertBacklog(a7);
     backlog.insertBacklog(a8);
+
+    System.out.println("El backlog contiene las siguientes actividades");
     backlog.toString();
+    System.out.println(" Ingrese la duracion en dias de su sprint: ");
+
+    Scanner var = new Scanner(System.in);
+    int capacity = var.nextInt();
+
+    Sprint sprint = new Sprint(capacity*8); // Asumimos una cantidad de 8 horas por dia
+
     try{
       sprint.completeSprint(backlog);
     }catch(RuntimeException e){
-      System.out.println(e.getMessage());
     }
+    System.out.println("El sprint ("+ (capacity*8)+" horas) queda conformado por las siguientes actividades");
     sprint.toString();
   }
 }
