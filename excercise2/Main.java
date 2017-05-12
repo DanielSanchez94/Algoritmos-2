@@ -19,7 +19,7 @@ public class Main {
     // se asumen 8 horas de trabajo por dia
     System.out.println(" Ingrese la duracion en dias de su sprint: ");
     Scanner var = new Scanner(System.in);
-    int capacity = (var.nextInt());
+    int capacity = (var.nextInt()*8);
     // Se inicializa el sprint y el backlog
     CreateSprint createSprint = new CreateSprint(capacity);
     // Se agregan las actividades creadas al backlog
@@ -31,10 +31,10 @@ public class Main {
     // Se muestra por pantalla el backlog
     System.out.println("El backlog contiene las siguientes actividades");
     createSprint.toString(createSprint.backlog);
-
     // Se completa el sprint
     createSprint.completeSprint();
     // Se muestra por pantalla el sprint resultante
+    System.out.println("El sprint contiene las siguientes actividades");
     createSprint.toString(createSprint.sprint);
   }// Fin del metodo
 }// Fin de la clase
