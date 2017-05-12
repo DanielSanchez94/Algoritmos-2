@@ -1,9 +1,6 @@
 /** Clase que define una actividad con su funcionalidad, valor y costo de tiempo para
 * realizarse.
 * @author: Armas Lucas, Martinez Agustin, Sanchez Daniel
-* @param funcionalidad Descripcion de la actividad
-* @param valor Vinculado a la prioridad y utilidad de la actividad
-* @param costoHr Costo en horas demandado para realizar la actividad
 */
 public class Actividad{
 
