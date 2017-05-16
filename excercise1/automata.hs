@@ -86,13 +86,13 @@ generateDelta xs ys = prodTupleList (prodTwoList xs ys) xs
 
 --Filtra todas las delta
 filterDelta :: Eq a => Eq b => [(a,b)] -> [[(a,b)]]
+filterDelta [] = [[]]
 filterDelta [x] = [[x]]
-filterDelta (x:y:xs) | ((fst (fst x) == fst (fst y)) &&
-                       (snd (snd x) == snd (snd y)) &&
-                       (snd x /= snd y)) = (filterDelta (x:xs) ++ filterDelta (y:xs))
-                     | ((fst (fst x) == fst (fst y)) &&
-                       (snd (snd x) == snd (snd y)) &&
+filterDelta (x:y:xs)  |((fst x == fst y) &&
+                       (snd x /= snd y)) = ([x]: filterDelta (x:xs)) ++ [y]: filterDelta (y:xs)
+                      |((fst x == fst y) &&
                        (snd x == snd y)) = filterDelta (y:xs)
+                      |otherwise = [x] : filterDelta (y:xs)
 
 
 
