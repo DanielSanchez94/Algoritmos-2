@@ -72,6 +72,11 @@ sampleDFA = ([0,1], ['a','b','c'], trans, 0, (\s->s==1))
 funFromTuples :: Eq a =>[(a,b)] -> a -> b
 funFromTuples ts x = fromJust (lookup x ts)
 
+-- Genera sublistas de una lista
+sublist :: Eq a => [a] -> [[a]]
+sublist [] = [[]]
+sublist (x:xs) = [(x:ys) | ys<-sublist xs] ++ sublist xs
+
 -- Producto cartesiano entre 1 lista de estados y 1 lista de caracteres
 prodTwoList :: [st] -> [Char] -> [(st, Char)]
 prodTwoList xs ys = [(x,y) | x <- xs, y <- ys]
@@ -81,19 +86,33 @@ prodTupleList :: [(st, Char)] -> [st] -> [((st,Char),st)]
 prodTupleList xs zs = [((fst x, snd y),z) | x <- xs, y <- xs, z <- zs]
 
 -- Genera todos los posibles estados de la funcion de transicion delta
-generateDelta :: [st] -> [Char] -> [((st,Char),st)]
-generateDelta xs ys = prodTupleList (prodTwoList xs ys) xs
+generateDelta :: Eq st => [st] -> [Char] -> [[((st,Char),st)]]
+generateDelta xs ys = removeDups (repOkList (sublist (prodTupleList (prodTwoList xs ys) xs)))
+--generateDelta xs ys = sublist (prodTupleList (prodTwoList xs ys) xs)
 
 --Filtra todas las delta
-filterDelta :: Eq a => Eq b => [(a,b)] -> [[(a,b)]]
-filterDelta [] = [[]]
-filterDelta [x] = [[x]]
-filterDelta (x:y:xs)  |((fst x == fst y) &&
-                       (snd x /= snd y)) = ([x]: filterDelta (x:xs)) ++ [y]: filterDelta (y:xs)
-                      |((fst x == fst y) &&
-                       (snd x == snd y)) = filterDelta (y:xs)
-                      |otherwise = [x] : filterDelta (y:xs)
+repOk :: Eq a => Eq b => [(a,b)] -> Bool
+repOk [] = True
+repOk [x] = True
+repOk (x:y:xs)  |fst x == fst y && snd x /= snd y = False
+                      |fst x == fst y && snd x == snd y = False
+                      |otherwise = True && repOk (y:xs)
+-- De una lista de listas elimina las listas que no cumplen con repOk
+repOkList :: Eq a => Eq b => [[(a,b)]] -> [[(a,b)]]
+repOkList [[]] = [[]]
+repOkList (x:xs)  | repOk x = x : repOkList xs
+                  | otherwise = repOkList xs
 
+--Elimina los elementos repetido de una lista
+removeDups :: Eq a => [a] -> [a]
+removeDups [] = []
+removeDups (x:xs)
+          | elem x xs = (removeDups xs)
+          | otherwise  = x:(removeDups xs)
+
+-- Generar un lista de todas las posibles cantidades de estados menores o iguales a k
+generateEst :: Int -> [[Int]]
+generateEst n = init (sublist ([0..n]))
 
 
 
