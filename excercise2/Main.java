@@ -32,7 +32,6 @@ public class Main {
     System.out.println("El backlog contiene las siguientes actividades");
     createSprint.toString(createSprint.backlog);
     // Se completa el sprint
-    createSprint.completeSprint();
     // Se muestra por pantalla el sprint resultante
     System.out.println("El sprint contiene las siguientes actividades");
     createSprint.toString(createSprint.sprint);

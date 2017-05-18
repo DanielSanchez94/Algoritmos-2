@@ -114,6 +114,50 @@ removeDups (x:xs)
 generateEst :: Int -> [[Int]]
 generateEst n = init (sublist ([0..n]))
 
+-- Evalua si un DFA hacepta un grupo de palabras y no acepta otro grupo
+evalString :: DFA Int -> [String] -> [String] ->Bool
+evalString dfa [] [] = True
+evalString dfa [] [y] = not (evalDFA dfa y)
+evalString dfa [x] [] = evalDFA dfa x
+evalString dfa (x:xs) (y:ys) = (evalDFA dfa x) && (not (evalDFA dfa y)) && evalString dfa xs ys
+
+
+-- Genera distintos DFA de acuerdo a la lista de lista de deltas y prueba si alguno funciona
+testDeltaList :: [st] -> [Char] -> [[((st,Char),st)]]-> [String] -> [String] -> [st] -> DFA Int
+testDeltaList _ _ [] _ _ _ = error "DELTA VACIO"
+testDeltaList sts alf (x:xs) pos neg fin  | evalString (sts,alf,funFromTuples,0,\s-> s elem fin) pos neg = (sts,alf,delta,0,fin)
+                                          | otherwise = testDeltaList sts alf xs pos neg fin
+                                          where delta s c = funFromTuples x (s,c)
+
+testFinalStateList :: [st] -> [Char] -> [String] -> [String] -> [[st]] -> DFA Int
+testFinalStateList _ _ _ _ [] = error "CONJUNTO DE ESTADOS FINALES VACIO"
+testFinalStateList sts alf pos neg (x:xs) | (testDeltaList st alf (generateDelta st alf) pos neg x) \= error = testDeltaList sts alf pos neg x
+                                    | otherwise = testFinalStateList sts alf pos neg xs
+
+testStateList :: [[st]] -> [Char] -> [String] -> [String] -> DFA Int
+testStateList [[]] _ _ _ = error "CONJUNTOS DE ESTADOS VACIO"
+testStateList (x:xs) alf pos neg | (testFinalStateList sts alf pos neg (sublist x)) \= error = testFinalStateList sts alf pos neg (sublist sts)
+                                | otherwise = testStateList xs alf pos neg
+
+generateDFA :: Int -> Int -> [Char] -> [String] -> [String] -> DFA Int
+--generateDFA k k _ _ _ = testStateList (generateEst n) alf pos neg
+generateDFA k n alf pos neg | n<=k && (testStateList (generateEst n) alf pos neg \= error) = testStateList (generateEst n) alf pos neg
+                            | n<k && (testStateList (generateEst n) alf pos neg == error) = generateDFA k (n+1) alf pos neg
+                            | otherwise = error "NO ES POSIBLE GENERAR DFA"
+
+principalMethod :: Int -> [Char] -> [String] -> [String] -> DFA Int
+principalMethod 0 _ _ _ = error "IMPOSIBLE GENERAR DFA CON CERO ESTADOS"
+--principalMethod k alf pos neg | intersecPosNeg pos neg = error "INTERSECCION ENTRE POS Y NEG NO VACIA"
+--                              | otherwise = generateDFA k 1 alf pos neg
+principalMethod k alf pos neg = generateDFA k 1 alf pos neg
+
+--intersecPosNeg :: [String] -> [String] -> Bool
+--intersecPosNeg xs [] = True
+--intersecPosNeg xs (y:ys) = not (y elem xs) && intersecPosNeg xs ys
+
+
+
+
 
 
 

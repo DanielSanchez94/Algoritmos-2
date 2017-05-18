@@ -22,7 +22,7 @@ public class CreateSprint{
   /** Metodo utilizado para completar el sprint con actividades
   * @see #sumParc()
   */
-  public void completeSprint(){
+  public void completeMatrix(){
     int k[][] = new int[backlog.size()+1][capacity+1];
     for (int i=0; i<=backlog.size(); i++) {
       for (int w=0; w<=capacity; w++) {
@@ -32,13 +32,10 @@ public class CreateSprint{
                 Actividad current = backlog.get(i-1); //Motivo de acortar longitud de siguiente condicion
                 // Si la actividad corriente entra en el sprint, maximiza el sprint parcial
                 // y si no ha sido agregada antes, se la agrega al sprint
-                if((current.valor)+k[i-1][w-current.costoHr] > k[i-1][w] && !sprint.contains(current) && sumParc()+current.costoHr <= capacity){
-                  sprint.add(current);
-                  k[i][w] = (current.valor)+k[i-1][w-current.costoHr];
-                }
+                k[i][w] = Math.max((current.valor)+k[i-1][w-current.costoHr] , k[i-1][w]);
+              }else{
                 k[i][w]= k[i-1][w];
-              }else
-                k[i][w]= k[i-1][w];
+              }
       }
     }
   }// Fin del metodo
