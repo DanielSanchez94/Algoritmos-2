@@ -22,7 +22,7 @@ public class CreateSprint{
   /** Metodo utilizado para completar el sprint con actividades
   * @see #sumParc()
   */
-  public void completeMatrix(){
+  public int completeMatrix(){
     int k[][] = new int[backlog.size()+1][capacity+1];
     for (int i=0; i<=backlog.size(); i++) {
       for (int w=0; w<=capacity; w++) {
@@ -38,6 +38,7 @@ public class CreateSprint{
               }
       }
     }
+    return k[backlog.size()][capacity];
   }// Fin del metodo
 
   /** Metodo utilizado para calcular la cantidad de horas ocupadas del sprint
