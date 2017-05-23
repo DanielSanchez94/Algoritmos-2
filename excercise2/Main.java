@@ -35,10 +35,9 @@ public class Main {
     createSprint.toString(createSprint.backlog);
     // Se completa el sprint
     // Se muestra por pantalla el sprint resultante
-    System.out.println("la matriz de calculo queda de la siguiente manera");
     System.out.println(" ");
-    //createSprint.toString(createSprint.sprint);
-    System.out.println("Valor en el sprint: " + createSprint.toString(createSprint.completeMatrix()));
-    //System.out.println(createSprint.completeMatrix().size());
+    System.out.println("El tiempo del sprint es mas optimo realizando las siguientes actividades:");
+    System.out.println(createSprint.toString(createSprint.completeMatrix()));
+    
   }// Fin del metodo
 }// Fin de la clase
