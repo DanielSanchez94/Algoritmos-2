@@ -11,11 +11,6 @@ evalDFA (qs, sigma, delta, s, inF) w =
   where deltaStar q [] = q
         deltaStar q (a:w) = deltaStar (delta q a) w
 
-sampleDFA :: DFA Int
-sampleDFA = ([0,1], ['a','b','c'], trans, 0, (\s->s==1))
-            where trans s c | s==0 && c=='a' = 1
-                            | otherwise = s
-
 --Crea una funcion a partir de una lista de tuplas
 funFromTuples :: Eq a =>[(a,b)] -> a -> b
 funFromTuples ts x = fromJust (lookup x ts)
@@ -24,11 +19,6 @@ funFromTuples ts x = fromJust (lookup x ts)
 sublist :: Eq a => [a] -> [[a]]
 sublist [] = [[]]
 sublist (x:xs) = [(x:ys) | ys<-sublist xs] ++ sublist xs
-
--- Genera todos los posibles estados de la funcion de transicion delta
-generateDelta :: Eq st => [st] -> [Char] -> [[((st,Char),st)]]
-generateDelta xs ys = removeDups (repOkList (sublist [((x,y),z) | x <- xs, y <- ys, z <- xs]))
-
 
 -- De una lista de listas elimina las listas que no son funcionales y totales
 repOkList :: Eq a => Eq b => [[(a,b)]] -> [[(a,b)]]
@@ -55,38 +45,26 @@ evalString dfa [] [y] = not (evalDFA dfa y)
 evalString dfa [x] [] = evalDFA dfa x
 evalString dfa (x:xs) (y:ys) = (evalDFA dfa x) && (not (evalDFA dfa y)) && evalString dfa xs ys
 
---Esta funcion se debe evaluar con xs variando desde 1 estado a k estados
---genDFA :: [Int] -> [Char] -> [((Int, Char),Int)] -> [DFA Int]
---genDFA _ _ [] = error "ERROR"
---genDFA [] _ _= error "ERROR"
---genDFA _ [] _ = error "ERROR"
---genDFA xs ys zs = [(xs, ys, funFromTuples, 0, (\s -> elem s z)) | z <- sublist xs]
+genDFA :: [Int] -> [Char] -> [[((Int,Char),Int)]] -> [DFA Int]
+genDFA xs ys zs = [(xs, ys, (\s c -> funFromTuples d (s,c)), 0, (\s -> elem s z)) | z<-sublist xs, d<-zs]
+
+-- Genera todos los posibles estados de la funcion de transicion delta
+generateDelta :: [Int] -> [Char] -> [[((Int,Char),Int)]]
+generateDelta xs ys = removeDups (repOkList (sublist [((x,y),z) | x <- xs, y <- ys, z <- xs]))
 
 generateEst :: Int -> [Int]
 generateEst n = [x | x <- [0..n-1]]
 
-findCorrectDFA :: [DFA Int] -> [String] -> [String] -> DFA Int
-findCorrectDFA [] _ _= error "ERROR"
-findCorrectDFA (x:xs) pos neg | evalString x pos neg = x
-                              | otherwise = findCorrectDFA xs pos neg
+auxFunction :: Int -> Int -> [Char] -> [DFA Int] -> [String] -> [String] -> DFA Int
+auxFunction k n alfab [] pos neg | n<k = auxFunction k (n+1) alfab (genDFA [x | x <- [0..n-1]] alfab (generateDelta [x | x <- [0..n-1]] alfab)) pos neg
+                                 | otherwise = error "No es posible formar un automata"
+auxFunction k n alfab (x:xs) pos neg | evalString x pos neg = x
+                                     | otherwise = auxFunction k n alfab xs pos neg
 
---auxFunction :: Int -> Int -> [Char] -> [String] -> [String] -> DFA Int
---auxFunction k n alfab pos neg | n<k &&
---                                findCorrectDFA (genDFA [x | x <- [0..n-1]] alfab) pos neg == error = auxFunction k (n+1) alfab pos neg
---                              | n<=k &&
---                                findCorrectDFA (genDFA [x | x <- [0..n-1]] alfab) pos neg /= error = findCorrectDFA (genDFA [x | x <- [0..n-1]] alfab) pos neg
---                              | otherwise = error "ERROR"
+mainFunction :: Int -> [Char] -> [String] -> [String] -> DFA Int
+mainFunction k alfab pos neg = auxFunction k 1 alfab (genDFA [0] alfab (generateDelta [0] alfab)) pos neg
 
--- PARA [0,1] ESTADOS Y ['a'] ALFABETO generateDelta DEVUELVE:
---[[((0,'a'),0),((1,'a'),0)],
---[((0,'a'),0),((1,'a'),1)],
---[((0,'a'),0)],
---[((0,'a'),1),((1,'a'),0)],
---[((0,'a'),1),((1,'a'),1)],
---[((0,'a'),1)],
---[((1,'a'),0)],
---[((1,'a'),1)],
---[]]
+
 
 
 
