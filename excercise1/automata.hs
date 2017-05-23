@@ -1,20 +1,5 @@
 import Data.Maybe
 
--- |Data type representing a Deterministic Finite Automaton, parametrized by a type of states.
-type DFA st = ([st], [Char], st->Char->st, st, st->Bool)
-
--- | Function f_M: Sigma* -> {True,False} defined by DFA M
--- Uses auxiliary function delta*: Q x Sigma* -> Q
-evalDFA :: DFA st -> String -> Bool
-evalDFA (qs, sigma, delta, s, inF) w =
-  inF (deltaStar s w)
-  where deltaStar q [] = q
-        deltaStar q (a:w) = deltaStar (delta q a) w
-
---Crea una funcion a partir de una lista de tuplas
-funFromTuples :: Eq a =>[(a,b)] -> a -> b
-funFromTuples ts x = fromJust (lookup x ts)
-
 -- Genera sublistas de una lista
 sublist :: Eq a => [a] -> [[a]]
 sublist [] = [[]]
@@ -38,35 +23,63 @@ removeDups (x:xs)
           | elem x xs = (removeDups xs)
           | otherwise  = x:(removeDups xs)
 
--- Evalua si un DFA hacepta un grupo de palabras y no acepta otro grupo
+-- Devuelve true si la interseccion entre dos listas de palabras es distinta de vacio, False en caso contrario
+intersec :: [String] -> [String] -> Bool
+intersec xs [] = False
+intersec xs (y:ys) = elem y xs || intersec xs ys
+
+-- |Data type representing a Deterministic Finite Automaton, parametrized by a type of states.
+type DFA st = ([st], [Char], st->Char->st, st, st->Bool)
+
+-- | Function f_M: Sigma* -> {True,False} defined by DFA M
+-- Uses auxiliary function delta*: Q x Sigma* -> Q
+evalDFA :: DFA st -> String -> Bool
+evalDFA (qs, sigma, delta, s, inF) w =
+  inF (deltaStar s w)
+  where deltaStar q [] = q
+        deltaStar q (a:w) = deltaStar (delta q a) w
+
+--Crea una funcion a partir de una lista de tuplas
+funFromTuples :: Eq a =>[(a,b)] -> a -> b
+funFromTuples ts x = fromJust (lookup x ts)
+
+-- Evalua si un DFA acepta un grupo de palabras y no acepta otro grupo
 evalString :: DFA Int -> [String] -> [String] ->Bool
 evalString dfa [] [] = True
 evalString dfa [] [y] = not (evalDFA dfa y)
 evalString dfa [x] [] = evalDFA dfa x
 evalString dfa (x:xs) (y:ys) = (evalDFA dfa x) && (not (evalDFA dfa y)) && evalString dfa xs ys
 
+-- Genera una lista de automatas variando el delta y el conjunto de estados finales
 genDFA :: [Int] -> [Char] -> [[((Int,Char),Int)]] -> [DFA Int]
 genDFA xs ys zs = [(xs, ys, (\s c -> funFromTuples d (s,c)), 0, (\s -> elem s z)) | z<-sublist xs, d<-zs]
 
--- Genera todos los posibles estados de la funcion de transicion delta
+-- Devuelve una lista de listas, es decir, una lista de deltas
 generateDelta :: [Int] -> [Char] -> [[((Int,Char),Int)]]
 generateDelta xs ys = removeDups (repOkList (sublist [((x,y),z) | x <- xs, y <- ys, z <- xs]))
 
-generateEst :: Int -> [Int]
-generateEst n = [x | x <- [0..n-1]]
-
+-- Genera automatas a partir de 1 estado a k estados y se queda con el primero que acepte pos y rechase neg
 auxFunction :: Int -> Int -> [Char] -> [DFA Int] -> [String] -> [String] -> DFA Int
 auxFunction k n alfab [] pos neg | n<k = auxFunction k (n+1) alfab (genDFA [x | x <- [0..n-1]] alfab (generateDelta [x | x <- [0..n-1]] alfab)) pos neg
                                  | otherwise = error "No es posible formar un automata"
 auxFunction k n alfab (x:xs) pos neg | evalString x pos neg = x
                                      | otherwise = auxFunction k n alfab xs pos neg
 
+-- Funcion principal, utilizada para inicializar a la funcion auxFunction
 mainFunction :: Int -> [Char] -> [String] -> [String] -> DFA Int
-mainFunction k alfab pos neg = auxFunction k 1 alfab (genDFA [0] alfab (generateDelta [0] alfab)) pos neg
+mainFunction 0 _ _ _ = error "No se puede formar DFA con 0 estados"
+mainFunction k alfab pos neg | intersec pos neg = error "No es posible encontrar automata que reconozca y no reconozca una palabra"
+                             | otherwise = auxFunction k 1 alfab (genDFA [0] alfab (generateDelta [0] alfab)) pos neg
 
+-- Imprime un automata con la delta en formato de lista (Aun no se muestran los estados finales)
+printDFA :: DFA Int -> ([Int],[Char],[((Int, Char),Int)],Int)
+printDFA (qs,sigma,delta,s,inF) = (qs,sigma,getDelta qs sigma delta,s)
 
+-- Funcion para recuperar la lista delta desde funFromTuples
+getDelta :: [Int] -> [Char] -> (Int->Char->Int) -> [((Int,Char),Int)]
+getDelta qs sigma delta = [((q,c),delta q c) | q<-qs, c<-sigma ]
 
-
-
-
---
+-- Si mainFunction devolviera ([Int],[Char],[((Int, Char),Int)],Int) y en lugar de hacer
+-- otherwise = auxFunction k 1 alfab (genDFA [0] alfab (generateDelta [0] alfab)) pos neg
+-- hago  otherwise = printDFA (auxFunction k 1 alfab (genDFA [0] alfab (generateDelta [0] alfab)) pos neg)
+-- tira el error:    *** Exception: Maybe.fromJust: Nothing
