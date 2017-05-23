@@ -9,11 +9,12 @@ public class Main {
   */
   public static void main(String[] args) {
     // Se crean actividades para insertar en el backlog
-    Actividad a = new Actividad("A", 10, 2);
-    Actividad b = new Actividad("B",10,2);
-    Actividad c = new Actividad("C",10,4);
-    Actividad d = new Actividad("D",9,2);
-    Actividad e = new Actividad("E",9,10);
+    Actividad a = new Actividad("A",1,2);
+    Actividad b = new Actividad("B",2,3);
+    Actividad c = new Actividad("C",3,4);
+    Actividad d = new Actividad("D",4,5);
+    Actividad e = new Actividad("E",5,10);
+    Actividad f = new Actividad("F",6,5);
 
     // Se solicita al usuario el numero de dias que dura el sprint,
     // se asumen 8 horas de trabajo por dia
@@ -28,13 +29,16 @@ public class Main {
     createSprint.backlog.add(c);
     createSprint.backlog.add(d);
     createSprint.backlog.add(e);
+    createSprint.backlog.add(f);
     // Se muestra por pantalla el backlog
     System.out.println("El backlog contiene las siguientes actividades");
     createSprint.toString(createSprint.backlog);
     // Se completa el sprint
     // Se muestra por pantalla el sprint resultante
-    System.out.println("El sprint contiene las siguientes actividades");
+    System.out.println("la matriz de calculo queda de la siguiente manera");
+    System.out.println(" ");
     //createSprint.toString(createSprint.sprint);
-    System.out.println("Valor en el sprint: " + createSprint.completeMatrix());
+    System.out.println("Valor en el sprint: " + createSprint.toString(createSprint.completeMatrix()));
+    //System.out.println(createSprint.completeMatrix().size());
   }// Fin del metodo
 }// Fin de la clase

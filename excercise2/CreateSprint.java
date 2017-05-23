@@ -10,6 +10,7 @@ public class CreateSprint{
   public ArrayList<Actividad> sprint;
   public int capacity;
 
+
   /**Constructor de la clase
   * @param num Representa la duracion del sprint
   */
@@ -22,7 +23,7 @@ public class CreateSprint{
   /** Metodo utilizado para completar el sprint con actividades
   * @see #sumParc()
   */
-  public int completeMatrix(){
+  public ArrayList<Actividad> completeMatrix(){
     int k[][] = new int[backlog.size()+1][capacity+1];
     for (int i=0; i<=backlog.size(); i++) {
       for (int w=0; w<=capacity; w++) {
@@ -38,7 +39,22 @@ public class CreateSprint{
               }
       }
     }
-    return k[backlog.size()][capacity];
+            //Printing the matrix
+
+        for (int[] i : k) {
+
+            for (int w : i) {
+
+                System.out.format("%5d", w);
+
+            }
+
+            System.out.println();
+
+        }
+        ArrayList<Actividad> list= new ArrayList<Actividad>();
+    return (getPathOfTheMatrix(backlog.size(), capacity , list, k));
+
   }// Fin del metodo
 
   /** Metodo utilizado para calcular la cantidad de horas ocupadas del sprint
@@ -67,4 +83,19 @@ public class CreateSprint{
     System.out.println(" ");
     return "End";
 	}// Fin del metodo
+
+	public ArrayList<Actividad> getPathOfTheMatrix(int i,int w, ArrayList<Actividad> res, int[][] k){
+		//System.out.println("i= "+i+"w= "+w+"res.size= "+res.size());
+		//caso base
+		if (i == 0){
+			return res;
+		} 
+      	if (k[i][w] > k[i-1][w]){
+      		res.add(backlog.get(i-1));
+      		return  getPathOfTheMatrix(i-1, w-backlog.get(i-1).costoHr, res, k);
+  		}else{
+  			return  getPathOfTheMatrix(i-1, w , res, k);
+  		}
+  	}
+
 }// Fin de la clase
