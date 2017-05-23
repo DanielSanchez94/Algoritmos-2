@@ -33,12 +33,12 @@ public class Main {
     // Se muestra por pantalla el backlog
     System.out.println("El backlog contiene las siguientes actividades");
     createSprint.toString(createSprint.backlog);
-    // Se completa el sprint
+    // Se completa la matriz de calculos y se llena el sprint
     // Se muestra por pantalla el sprint resultante
-    System.out.println("la matriz de calculo queda de la siguiente manera");
-    System.out.println(" ");
-    //createSprint.toString(createSprint.sprint);
-    System.out.println("Valor en el sprint: " + createSprint.toString(createSprint.completeMatrix()));
-    //System.out.println(createSprint.completeMatrix().size());
+    System.out.println("Actividades que conforman el sprint: ("+capacity+" horas) ");
+    System.out.println("Valor en el sprint: " +
+      createSprint.toString(createSprint.getPathOfTheMatrix
+        (createSprint.backlog.size(), createSprint.capacity ,createSprint.completeMatrix())));
+
   }// Fin del metodo
 }// Fin de la clase
