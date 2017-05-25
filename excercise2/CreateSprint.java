@@ -3,7 +3,7 @@ import java.lang.RuntimeException;
 import java.lang.Math;
 
 /** Clase que define un sprint, representado como una lista de actividades
-* @author: Armas Lucas, Martinez Agustin, Sanchez Daniel
+* @author: Armas Lucas, Sanchez Daniel
 */
 public class CreateSprint{
   	public ArrayList<Actividad> backlog;

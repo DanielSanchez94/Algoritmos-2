@@ -1,6 +1,6 @@
 import java.util.Scanner;
 /** Clase que define el menu principal de nuestro programa
-* @author: Armas Lucas, Martinez Agustin, Sanchez Daniel
+* @author: Armas Lucas, Sanchez Daniel
 */
 public class Main {
 
